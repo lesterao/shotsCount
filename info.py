@@ -25,26 +25,6 @@ for dirName, subdirList, fileList in os.walk(rootDir):
         #print('\t%s' % fname)
         dirname1 = dirName.replace('.\\','')
         #print(dirname1)
-        #Acciones ACT anotadas
-        if '&'+dirname1+'&' in fname and '.txt' in fname and 'ACT' in fname:
-            ACTAnotados= ACTAnotados+1
-            #print('\t%s' % fname)
-            try:
-                f = open(dirName+"/"+fname)
-                for line in f:
-                    line = line.replace('\t','/')
-                    line = line.replace(' ','-')
-                    nAction=nAction+1
-                    #print(line)
-            except IOError as e:
-                print("Uh oh! Esto no existe")
-
-            if f:
-                nAction=nAction-1
-                #print(nAction)
-                f.close()
-        
-        #Frames anotados
         if '&'+dirname1+'&' in fname and '.txt' in fname and '_ANN_' in fname:
             #print('\t%s' % fname)
             try:
@@ -76,6 +56,27 @@ for dirName, subdirList, fileList in os.walk(rootDir):
                     #print(line)
             except IOError as e:
                 print("Uh oh! Esto no existe")
+            #Acciones ACT anotadas
+        if '&'+dirname1+'&' in fname and '.txt' in fname and 'ACTANN' in fname:
+            ACTAnotados= ACTAnotados+1
+            #print('\t%s' % fname)
+            try:
+                f = open(dirName+"/"+fname)
+                for line in f:
+                    line = line.replace('\t','/')
+                    line = line.replace(' ','-')
+                    nAction=nAction+1
+                    #print(nAction)
+            except IOError as e:
+                print("Uh oh! Esto no existe")
+
+            if f:
+                if nAction > 0:
+                    nAction=nAction-1
+                #print(nAction)
+                #f.close()
+        
+        #Frames anotados
 
             if f:
                 nFrames=nFrames-1
