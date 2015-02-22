@@ -22,12 +22,11 @@ def writteACTFILE(dirName,fname,nFrames,sumaf,nAction):
     
     if os.access(dirName + "/" +"CITEDI_"+ str(nAction)+"ACT"+replace+".txt", os.X_OK):
         os.remove(dirName + "/" +"CITEDI_"+ str(nAction)+"ACT"+replace+".txt")
-    else:
-        f = open(dirName + "/" +"CITEDI_"+ str(nAction)+"ACT"+replace+".txt",'w')
-        f.writelines("Frames Anotados Fichero: "+str(nFrames)+'\n')
-        f.writelines("Total Video Anotado Fichero: "+str(sumaf)+'\n')
-        f.writelines("Total Acciones Anotadas Fichero: "+str(nAction)+'\n')
-        f.close()
+    f = open(dirName + "/" +"CITEDI_"+ str(nAction)+"ACT"+replace+".txt",'w')
+    f.writelines("Frames Anotados Fichero: "+str(nFrames)+'\n')
+    f.writelines("Total Video Anotado Fichero: "+str(sumaf)+'\n')
+    f.writelines("Total Acciones Anotadas Fichero: "+str(nAction)+'\n')
+    f.close()
 
 def add_secs_to_time(timeval, secs_to_add):
     secs = timeval.hour * 3600 + timeval.minute * 60 + timeval.second
@@ -40,7 +39,7 @@ for dirName, subdirList, fileList in os.walk(rootDir):
         #print('\t%s' % fname)
         dirname1 = dirName.replace('.\\','')
         #print(dirname1)
-        if '&'+dirname1+'&' in fname and '.txt' in fname and '_ANN_' in fname:
+        if '&'+dirname1+'&' in fname and '.txt' in fname and '_ANN_' in fname and not "citedi" in fname:
             print('\t%s' % fname)
             try:
                 f = open(dirName+"/"+fname)
@@ -72,7 +71,7 @@ for dirName, subdirList, fileList in os.walk(rootDir):
             except IOError as e:
                 print("Uh oh! Esto no existe")
             #Acciones ACT anotadas
-        if '&'+dirname1+'&' in fname and '.txt' in fname and 'ACTANN' in fname:
+        if '&'+dirname1+'&' in fname and '.txt' in fname and 'ACTANN' in fname and not "citedi" in fname:
             ACTAnotados= ACTAnotados+1
             #print('\t%s' % fname)
             try:
@@ -111,5 +110,5 @@ for dirName, subdirList, fileList in os.walk(rootDir):
                 f.close()
 print("**************Totales***************")
 print("Total Video Anotado = "+ str(TvideoAnotado))
-print("Total Frames Anotados= "+str(tFrames))
+print("Total Shots Anotados= "+str(tFrames))
 print("Total De Acciones Anotadas= "+str(tAction))    
