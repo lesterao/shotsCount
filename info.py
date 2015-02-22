@@ -14,6 +14,21 @@ TvideoAnotadoFile = time(0,0,0) # Total de video anotado en fichero
 suma = time(0,0,0)
 sumaf = time(0,0,0)
 
+def writteACTFILE(dirName,fname,nFrames,sumaf,nAction):
+    print(dirName,fname)
+    index = fname.find('Mx')
+    replace = fname[index:len(fname)-4]
+    #print(replace)
+    
+    if os.access(dirName + "/" +"CITEDI_"+ str(nAction)+"ACT"+replace+".txt", os.X_OK):
+        os.remove(dirName + "/" +"CITEDI_"+ str(nAction)+"ACT"+replace+".txt")
+    else:
+        f = open(dirName + "/" +"CITEDI_"+ str(nAction)+"ACT"+replace+".txt",'w')
+        f.writelines("Frames Anotados Fichero: "+str(nFrames)+'\n')
+        f.writelines("Total Video Anotado Fichero: "+str(sumaf)+'\n')
+        f.writelines("Total Acciones Anotadas Fichero: "+str(nAction)+'\n')
+        f.close()
+
 def add_secs_to_time(timeval, secs_to_add):
     secs = timeval.hour * 3600 + timeval.minute * 60 + timeval.second
     secs += secs_to_add
@@ -26,7 +41,7 @@ for dirName, subdirList, fileList in os.walk(rootDir):
         dirname1 = dirName.replace('.\\','')
         #print(dirname1)
         if '&'+dirname1+'&' in fname and '.txt' in fname and '_ANN_' in fname:
-            #print('\t%s' % fname)
+            print('\t%s' % fname)
             try:
                 f = open(dirName+"/"+fname)
                 for line in f:
@@ -88,6 +103,8 @@ for dirName, subdirList, fileList in os.walk(rootDir):
                 print("Total Video Anotado Fichero: "+str(sumaf))
                 print("Total Acciones Anotadas Fichero: "+str(nAction))
                 print("-------------------------------------------")
+                writteACTFILE(dirName,fname,nFrames,sumaf,nAction)
+                
                 sumaf = time(0,0,0)
                 nFrames=0
                 nAction=0
