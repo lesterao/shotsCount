@@ -13,9 +13,10 @@ TvideoAnotado = time(0,0,0) # Total de video anotado
 TvideoAnotadoFile = time(0,0,0) # Total de video anotado en fichero
 suma = time(0,0,0)
 sumaf = time(0,0,0)
+dosficheros = 0; #cuando termine de leer ACT y ANN escribo el fichero
 
 def writteACTFILE(dirName,fname,nFrames,sumaf,nAction):
-    print(dirName,fname)
+    #print(dirName,fname)
     index = fname.find('Mx')
     replace = fname[index:len(fname)-4]
     #print(replace)
@@ -23,6 +24,8 @@ def writteACTFILE(dirName,fname,nFrames,sumaf,nAction):
     if os.access(dirName + "/" +"CITEDI_"+ str(nAction)+"ACT"+replace+".txt", os.X_OK):
         os.remove(dirName + "/" +"CITEDI_"+ str(nAction)+"ACT"+replace+".txt")
     f = open(dirName + "/" +"CITEDI_"+ str(nAction)+"ACT"+replace+".txt",'w')
+    
+    f.writelines(fname+'\n')
     f.writelines("Frames Anotados Fichero: "+str(nFrames)+'\n')
     f.writelines("Total Video Anotado Fichero: "+str(sumaf)+'\n')
     f.writelines("Total Acciones Anotadas Fichero: "+str(nAction)+'\n')
@@ -38,8 +41,30 @@ for dirName, subdirList, fileList in os.walk(rootDir):
     for fname in fileList:
         #print('\t%s' % fname)
         dirname1 = dirName.replace('.\\','')
+        if '&'+dirname1+'&' in fname and '.txt' in fname and 'ACTANN' in fname and not "citedi" in fname:
+            print(dirname1+"/"+fname)
+            dosficheros+=1;
+            ACTAnotados= ACTAnotados+1
+            #print('\t%s' % fname)
+            try:
+                f = open(dirName+"/"+fname)
+                for line in f:
+                    line = line.replace('\t','/')
+                    line = line.replace(' ','-')
+                    nAction=nAction+1
+                    #print(nAction)
+            except IOError as e:
+                print("Uh oh! Esto no existe")
+
+            if f:
+                if nAction > 0:
+                    nAction=nAction-1
+                f.close()
+
         #print(dirname1)
         if '&'+dirname1+'&' in fname and '.txt' in fname and '_ANN_' in fname and not "citedi" in fname:
+            print(dirname1+"/"+fname)
+            dosficheros+=1;
             print('\t%s' % fname)
             try:
                 f = open(dirName+"/"+fname)
@@ -71,43 +96,27 @@ for dirName, subdirList, fileList in os.walk(rootDir):
             except IOError as e:
                 print("Uh oh! Esto no existe")
             #Acciones ACT anotadas
-        if '&'+dirname1+'&' in fname and '.txt' in fname and 'ACTANN' in fname and not "citedi" in fname:
-            ACTAnotados= ACTAnotados+1
-            #print('\t%s' % fname)
-            try:
-                f = open(dirName+"/"+fname)
-                for line in f:
-                    line = line.replace('\t','/')
-                    line = line.replace(' ','-')
-                    nAction=nAction+1
-                    #print(nAction)
-            except IOError as e:
-                print("Uh oh! Esto no existe")
-
             if f:
-                if nAction > 0:
-                    nAction=nAction-1
-                #print(nAction)
-                #f.close()
-        
-        #Frames anotados
-
-            if f:
-                nFrames=nFrames-1
-                TvideoAnotado = suma
-                tFrames+=nFrames
-                tAction+=nAction
-                print("Fichero: "+dirName+"/"+fname)
-                print("Frames Anotados Fichero: "+str(nFrames))
-                print("Total Video Anotado Fichero: "+str(sumaf))
-                print("Total Acciones Anotadas Fichero: "+str(nAction))
-                print("-------------------------------------------")
-                writteACTFILE(dirName,fname,nFrames,sumaf,nAction)
-                
-                sumaf = time(0,0,0)
-                nFrames=0
-                nAction=0
                 f.close()
+    if dosficheros==2:
+        print("terminado")
+        dosficheros=0
+        nFrames=nFrames-1
+        TvideoAnotado = suma
+        tFrames+=nFrames
+        tAction+=nAction
+        #print("Fichero: "+dirName+"/"+fname)
+        print("Frames Anotados Fichero: "+str(nFrames))
+        print("Total Video Anotado Fichero: "+str(sumaf))
+        print("Total Acciones Anotadas Fichero: "+str(nAction))
+        print("-------------------------------------------")
+        writteACTFILE(dirName,fname,nFrames,sumaf,nAction)
+        sumaf = time(0,0,0)
+        nFrames=0
+        nAction=0
+        
+    
+            
 print("**************Totales***************")
 print("Total Video Anotado = "+ str(TvideoAnotado))
 print("Total Shots Anotados= "+str(tFrames))
