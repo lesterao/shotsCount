@@ -13,10 +13,6 @@ TvideoAnotado = time(0,0,0) # Total de video anotado
 TvideoAnotadoFile = time(0,0,0) # Total de video anotado en fichero
 suma = time(0,0,0)
 sumaf = time(0,0,0)
-flag = 0   #imprimir cuando encuentre los 2 ficheros
-wAction = 0
-wnFrames=0
-wsumaf = time(0,0,0)
 
 def writteACTFILE(dirName,fname,nFrames,sumaf,nAction):
     print(dirName,fname)
@@ -44,7 +40,6 @@ for dirName, subdirList, fileList in os.walk(rootDir):
         dirname1 = dirName.replace('.\\','')
         #print(dirname1)
         if '&'+dirname1+'&' in fname and '.txt' in fname and '_ANN_' in fname and not "citedi" in fname:
-            flag+=1
             print('\t%s' % fname)
             try:
                 f = open(dirName+"/"+fname)
@@ -75,12 +70,8 @@ for dirName, subdirList, fileList in os.walk(rootDir):
                     #print(line)
             except IOError as e:
                 print("Uh oh! Esto no existe")
-            
-        wnFrames=nFrames
-        wsumaf = sumaf
             #Acciones ACT anotadas
         if '&'+dirname1+'&' in fname and '.txt' in fname and 'ACTANN' in fname and not "citedi" in fname:
-            flag+=1
             ACTAnotados= ACTAnotados+1
             #print('\t%s' % fname)
             try:
@@ -102,7 +93,7 @@ for dirName, subdirList, fileList in os.walk(rootDir):
         #Frames anotados
 
             if f:
-                Frames=nFrames-1
+                nFrames=nFrames-1
                 TvideoAnotado = suma
                 tFrames+=nFrames
                 tAction+=nAction
@@ -111,14 +102,12 @@ for dirName, subdirList, fileList in os.walk(rootDir):
                 print("Total Video Anotado Fichero: "+str(sumaf))
                 print("Total Acciones Anotadas Fichero: "+str(nAction))
                 print("-------------------------------------------")
-                wAction=nAction
+                writteACTFILE(dirName,fname,nFrames,sumaf,nAction)
+                
                 sumaf = time(0,0,0)
                 nFrames=0
                 nAction=0
                 f.close()
-        if flag==2:
-            writteACTFILE(dirName,fname,wnFrames,wsumaf,wAction)
-            flag=0
 print("**************Totales***************")
 print("Total Video Anotado = "+ str(TvideoAnotado))
 print("Total Shots Anotados= "+str(tFrames))
