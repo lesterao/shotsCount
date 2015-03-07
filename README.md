@@ -38,6 +38,20 @@ Total Video Anotado = 00:03:57
 Total Shots Anotados= 17
 Total De Acciones Anotadas= 18
 
+Nota importante:
+Se debe respetar los nombes de los ficheros .txt shots_ANN_ y _ACTANN_ ejemplo:
+ELAN_8shots_ANN_Mx2qoiudfnasrwaer.mp4.txt
+ELAN_ACTANN_Mx2qoiudfnasrwaer.mp4.txt
+Recordar que el script busca primeramente el fichero de anotacion ANN, suma los tiempos y los shots. Luego busca el ACTANN y suma las acciones anotadas. Al finalizar crea el fichero de salida CITEDI_.
+Si no se respeta el nombre de los .txt es posible que tenga este resultado en la salida:
+Frames Anotados Fichero: -1
+Total Video Anotado Fichero: 0
+Total Acciones Anotadas Fichero: 18
+Esto debido a que encuentra primero el fichero ACTANN.
+
+
+
+
 
 
 
